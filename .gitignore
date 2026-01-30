@@ -1,1 +1,5 @@
 *.pkl
+
+
+data/raw/energy_usage.csv
+
