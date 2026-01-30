@@ -17,7 +17,11 @@ Joblib
 
 # Installation:
 # 1: Clone the repository
-     git clone[Click here](https://github.com/leepaul10/data_center_energy_prediction.git)
+     ## Clone the Repository
+
+```bash
+git clone https://github.com/leepaul10/data_center_energy_prediction.git
+
 
 # 2: move into folder: 
      cd data_center_energy_prediction
