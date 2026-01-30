@@ -1,0 +1,30 @@
+
+
+# The Modules used for this Project are mentioned Below :
+
+pandas
+numpy
+matplotlib
+scikit-learn
+streamlit
+matplotlib
+joblib
+
+
+# create a venv to run the project
+# create inside root folder
+# for activating the venv
+# venv is not pushed into github as it is a large file and can be created on local machine to run
+
+# 1. Create the virtual environment inside the root folder
+# python -m venv venv
+
+# 2. Activate the virtual environment
+# Windows:
+# venv\Scripts\activate
+
+# Mac / Linux:
+# source venv/bin/activate
+
+# 3. Install the project dependencies:
+# pip install -r requirements.txt
