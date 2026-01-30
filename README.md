@@ -1,7 +1,8 @@
 # Data Center Energy Prediction
 
 Due to the classified nature of real-world data center energy consumption data, this project uses the ASHRAE Great Energy Predictor Dataset as a realistic proxy. The dataset includes office, education, healthcare, and public-service buildings, which share comparable energy behavior patterns (temporal usage, weather dependency, and load variability).
-The focus of this project is on modeling methodology, feature engineering, and predictive performance rather than access to proprietary datasets.
+The focus of this project is on modeling methodology, feature engineering, and predictive performance rather than access to proprietary datasets.The Original dataset used in this project('energy_usage.csv') is too large to include in this repository.
+All codes and models provided are full functional.
 
 # This project predicts energy consumption in  centers for next 1 Hour, 24 Hour, and 48 Hour at the present time.
 # The Energy Consumption is  Predicted using historical Energy data, weather condtions, and  building information.
