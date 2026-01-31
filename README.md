@@ -4,8 +4,8 @@ Due to the classified nature of real-world data center energy consumption data, 
 The focus of this project is on modeling methodology, feature engineering, and predictive performance rather than access to proprietary datasets.The Original dataset used in this project('energy_usage.csv') is too large to include in this repository.
 All codes and models provided are full functional.
 
-# This project predicts energy consumption in  centers for next 1 Hour, 24 Hour, and 48 Hour at the present time.
-# The Energy Consumption is  Predicted using historical Energy data, weather condtions, and  building information.
+This project predicts energy consumption in  centers for next 1 Hour, 24 Hour, and 48 Hour at the present time.
+The Energy Consumption is  Predicted using historical Energy data, weather condtions, and  building information.
 
 # Languages and Machine Learning Packages Used:
 python
@@ -34,9 +34,9 @@ Joblib
      streamlit run app.py
 
 # Features: 
-# ::: Predicts Energy Consumption for 1 hour, 24 hour and 48 hour for the exact time
-# ::: Handles historical weather and building data 
-# ::: Enabled Streamlit for user Interface and inputs for prediction
+Predicts Energy Consumption for 1 hour, 24 hour and 48 hour for the exact time
+Handles historical weather and building data 
+Enabled Streamlit for user Interface and inputs for prediction
 
 
 # About Me :
