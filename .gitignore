@@ -1,5 +1,4 @@
 *.pkl
-
-
+venv
 data/raw/energy_usage.csv
 
