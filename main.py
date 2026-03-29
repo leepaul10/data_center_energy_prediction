@@ -3,6 +3,7 @@ import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+import uvicorn
 
 # 1. Initialize FastAPI
 app = FastAPI(title="Data Center Energy Prediction API")
