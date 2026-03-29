@@ -1,19 +1,27 @@
-from fastapi import FastAPI
+import os
 import joblib
 import pandas as pd
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-app = FastAPI(title="Cyncly AI Innovation: Energy Predictor")
+# 1. Initialize FastAPI
+app = FastAPI(title="Data Center Energy Prediction API")
 
-# Load your Random Forest model
-model = joblib.load("final_model.pkl")
+# 2. Load the Model
+try:
+    # Using 'final_model.pkl' as per your streamlit script
+    model = joblib.load("final_model.pkl")
+except Exception as e:
+    print(f"Error loading model: {e}")
+    model = None
 
-# Define the data structure for your 21 input columns
-class EnergyInput(BaseModel):
+# 3. Define the Input Schema (The "Contract" for Postman)
+class EnergyPredictionRequest(BaseModel):
     building_id: int
     meter: int
+    meter_reading: float
     site_id: int
-    primary_use: str  # e.g., "Education", "Office"
+    primary_use: int  # Note: Your Streamlit code converts this to int
     square_feet: float
     year_built: float
     air_temperature: float
@@ -31,22 +39,39 @@ class EnergyInput(BaseModel):
     lag_24h: float
     lag_48h: float
 
+@app.get("/")
+def health_check():
+    return {"status": "Online", "model_loaded": model is not None}
+
 @app.post("/predict")
-def predict_energy(data: EnergyInput):
-    # Convert input to a DataFrame
-    # Note: If your model was trained on numerical values for 'primary_use', 
-    # you may need to add a LabelEncoder step here.
-    input_dict = data.dict()
-    input_df = pd.DataFrame([input_dict])
-    
-    # Make predictions for 1h, 24h, and 48h
-    prediction = model.predict(input_df)
-    
-    return {
-        "status": "success",
-        "predictions": {
-            "energy_1h": float(prediction[0][0]),
-            "energy_24h": float(prediction[0][1]),
-            "energy_48h": float(prediction[0][2])
+def predict(data: EnergyPredictionRequest):
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded on server.")
+
+    try:
+        # Convert Pydantic model to Dictionary, then to DataFrame
+        input_dict = data.dict()
+        input_df = pd.DataFrame([input_dict])
+
+        # Ensure numeric types just like your Streamlit code
+        input_df = input_df.apply(pd.to_numeric)
+
+        # Run Prediction (T+1, T+24, T+48)
+        prediction = model.predict(input_df)
+
+        return {
+            "forecast": {
+                "t_plus_1h": round(float(prediction[0][0]), 2),
+                "t_plus_24h": round(float(prediction[0][1]), 2),
+                "t_plus_48h": round(float(prediction[0][2]), 2)
+            },
+            "unit": "kWh"
         }
-    }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    # Use environment variable for Port to support Render deployment
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
