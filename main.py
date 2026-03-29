@@ -72,6 +72,7 @@ def predict(data: EnergyPredictionRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    # Use environment variable for Port to support Render deployment
-    port = int(os.getenv("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # Render provides a 'PORT' environment variable. 
+    # If it's not found (like on your laptop), it defaults to 8000.
+    port = int(os.getenv("PORT", 8000)) 
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
