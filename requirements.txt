@@ -12,7 +12,7 @@ matplotlib
 joblib
 fastapi
 uvicorn
-
+pydantic
 # create a venv to run the project
 # create inside root folder
 # for activating the venv
