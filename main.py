@@ -163,20 +163,19 @@ import os
 import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware  # NEW: Import for CORS
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import uvicorn
 
 # 1. Initialize FastAPI
 app = FastAPI(title="Data Center Energy Prediction API")
 
-# 2. Add CORS Middleware (NEW: Required for React)
+# 2. Add CORS Middleware (Essential for React)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows any frontend (like your React app) to connect
+    allow_origins=["*"],  # Allows your React app to connect
     allow_credentials=True,
-    allow_methods=["*"],  # Allows POST, GET, OPTIONS, etc.
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # 3. Load the Model
@@ -186,13 +185,13 @@ except Exception as e:
     print(f"Error loading model: {e}")
     model = None
 
-# 4. Define the Input Schema
-class EnergyPredictionRequest(BaseModel):
+# 4. Define Input Schema (Matches your Postman Body)
+class EnergyRequest(BaseModel):
     building_id: int
     meter: int
     meter_reading: float
     site_id: int
-    primary_use: int 
+    primary_use: int
     square_feet: float
     year_built: float
     air_temperature: float
@@ -215,17 +214,17 @@ def health_check():
     return {"status": "Online", "model_loaded": model is not None}
 
 @app.post("/predict")
-def predict(data: EnergyPredictionRequest):
+def predict(data: EnergyRequest):
     if model is None:
         raise HTTPException(status_code=500, detail="Model not loaded on server.")
-
     try:
-        input_dict = data.dict()
-        input_df = pd.DataFrame([input_dict])
-        input_df = input_df.apply(pd.to_numeric)
-
-        prediction = model.predict(input_df)
-
+        # Convert incoming JSON to DataFrame
+        df = pd.DataFrame([data.dict()])
+        df = df.apply(pd.to_numeric)
+        
+        # Prediction
+        prediction = model.predict(df)
+        
         return {
             "forecast": {
                 "t_plus_1h": round(float(prediction[0][0]), 2),
@@ -238,5 +237,6 @@ def predict(data: EnergyPredictionRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8000)) 
+    import uvicorn
+    port = int(os.getenv("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=port)
